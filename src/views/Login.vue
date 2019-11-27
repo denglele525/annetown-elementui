@@ -12,7 +12,8 @@
                 <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item prop="password">
-                <el-input type="text" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码"></el-input>
+                <el-input type="text" v-model="loginForm.password" auto-complete="off" placeholder="请输入密码"
+                          @keydown.enter.native="submitLogin"></el-input>
             </el-form-item>
             <el-checkbox class="loginRemember" v-model="checked"></el-checkbox>
             <el-button type="primary" style="width:100%;" @click="submitLogin">登录</el-button>
@@ -45,7 +46,8 @@
                         this.postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
                             if (resp) {
                                 window.sessionStorage.setItem("user", JSON.stringify(resp.data));
-                                this.$router.replace("/home")
+                                let path = this.$route.query.redirect;
+                                this.$router.replace((path == '/' || path == undefined) ? '/home' : path)
                             }
                         })
                         // this.show = true;

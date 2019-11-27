@@ -19,6 +19,8 @@ axios.interceptors.response.use(success => {
             Message.error({message: "尚未登录，请登录"})
         } else {
             if (error.response.data.message) {
+                Message.error({message: error.response.data.message})
+            } else {
                 Message.error({message: "未知错误！"})
             }
         }
@@ -60,17 +62,15 @@ export const putRequest = (url, params) => {
         data: params
     })
 };
-export const getRequest = (url, params) => {
+export const getRequest = (url) => {
     return axios({
         method: 'get',
         url: `${base}${url}`,
-        data: params
     })
 };
 export const deleteRequest = (url) => {
     return axios({
         method: 'delete',
         url: `${base}${url}`,
-        data: params
     });
 }

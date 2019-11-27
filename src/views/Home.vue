@@ -5,7 +5,7 @@
                 <div class="title">微人事</div>
                 <el-dropdown class="userInfo" @command="commandHandler">
   <span class="el-dropdown-link">
-    {{user.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+    {{user.name}}<i><img :src="user.userface" alt=""></i>
   </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item command="userInfo">个人中心</el-dropdown-item>
@@ -30,7 +30,14 @@
                     </el-menu>
                 </el-aside>
                 <el-main>
-                    <router-view/>
+                    <el-breadcrumb separator-class="el-icon-arrow-right" v-if="this.$router.currentRoute.path!='/home'">
+                        <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                        <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
+                    </el-breadcrumb>
+                    <div class="homeWelcome" v-if="this.$router.currentRoute.path=='/home'">
+                        欢迎来到微人事！
+                    </div>
+                    <router-view class="homeRouterView"/>
                 </el-main>
             </el-container>
         </el-container>
@@ -75,6 +82,18 @@
 </script>
 
 <style scoped>
+    .homeRouterView {
+        margin-top: 10px;
+    }
+
+    .homeWelcome {
+        text-align: center;
+        font-size: 30px;
+        font-family: 华文行楷;
+        color: #fac1ff;
+        padding-top: 50px;
+    }
+
     .homeHeader {
         background-color: #409eff;
         display: flex;
@@ -92,5 +111,18 @@
 
     .homeHeader .userInfo {
         cursor: pointer;
+    }
+
+    .el-dropdown-link img {
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+        margin-left: 8px;
+    }
+
+    .el-dropdown-link {
+        display: flex;
+        align-items: center;
+
     }
 </style>
