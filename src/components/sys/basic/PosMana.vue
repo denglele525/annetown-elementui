@@ -4,6 +4,10 @@
             <el-input
                     size="small"
                     class="addPosInput"
+                    v-loading="loading"
+                    element-loading-text="拼命加载中"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)"
                     placeholder="添加职位..."
                     prefix-icon="el-icon-plus"
                     @keydown.enter.native="addPosition"
@@ -14,6 +18,7 @@
         <div class="posManaMain">
             <el-table
                     :data="positions"
+
                     border
                     @selection-change="handleSelectionChange">
                 size="small"
@@ -68,10 +73,10 @@
                 :visible.sync="dialogVisible"
                 width="30%">
             <div>
-              <div>
-                  <el-tag>职位名称</el-tag>
-                  <el-input class="updatePosInput" size="small" v-model="updatePos.name"></el-input>
-              </div>
+                <div>
+                    <el-tag>职位名称</el-tag>
+                    <el-input class="updatePosInput" size="small" v-model="updatePos.name"></el-input>
+                </div>
                 <div>
                     <el-tag>是否启用</el-tag>
                     <el-switch
@@ -94,13 +99,14 @@
         name: "PosMana",
         data() {
             return {
+                loading: false,
                 pos: {
                     name: ''
                 },
                 dialogVisible: false,
                 updatePos: {
                     name: '',
-                    enabled:''
+                    enabled: ''
                 },
                 positions: [],
                 multipleSelection: []
@@ -156,7 +162,9 @@
                 });
             },
             initPositions() {
+                this.loading = true;
                 this.getRequest("/system/basic/pos/").then(resp => {
+                    this.loading = false;
                     if (resp) {
                         this.positions = resp;
                     }

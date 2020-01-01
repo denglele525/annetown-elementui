@@ -1,12 +1,11 @@
 <template>
     <div>
-        <el-alert
-                v-if="show"
-                title="成功提示的文案"
-                type="success"
-                show-icon>
-        </el-alert>
-        <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContain">
+        <el-form
+                :rules="rules"
+                ref="loginForm"
+                v-loading="loading"
+                :model="loginForm"
+                class="loginContain">
             <h3 class="loginTitle">系统登录</h3>
             <el-form-item prop="username">
                 <el-input size="normal" type="text" v-model="loginForm.username" auto-complete="off"
@@ -28,6 +27,7 @@
         name: "Login",
         data() {
             return {
+                loading: false,
                 show: false,
                 loginForm: {
                     username: 'admin',
@@ -44,7 +44,9 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
+                        this.loading = true;
                         this.postKeyValueRequest('/doLogin', this.loginForm).then(resp => {
+                            this.loading = false;
                             if (resp) {
                                 window.sessionStorage.setItem("user", JSON.stringify(resp.data));
                                 let path = this.$route.query.redirect;

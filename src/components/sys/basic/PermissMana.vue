@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="globalLoading">
         <div class="permissManaTool">
             <el-input size="small" placeholder="请输入角色英文名" v-model="role.name">
                 <template slot="prepend">ROLE_</template>
@@ -9,7 +9,9 @@
             <el-button type="primary" size="small" icon="el-icon-plus" @click="doAddRole">添加角色</el-button>
         </div>
         <div class="permissManaMain">
-            <el-collapse v-model="activeName" accordion @change="change">
+            <el-collapse v-model="activeName"
+                         accordion
+                         @change="change">
                 <el-collapse-item :title="r.nameZh" :name="r.id" v-for="(r,index) in roles" :key="index">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
@@ -42,6 +44,7 @@
         name: "PermissMana",
         data() {
             return {
+                globalLoading: false,
                 role: {
                     name: '',
                     nameZh: ''
@@ -88,7 +91,9 @@
             },
             doAddRole() {
                 if (this.role.name && this.role.nameZh) {
+                    this.globalLoading = true;
                     this.postRequest("/system/basic/permiss/role", this.role).then(resp => {
+                        this.globalLoading = false;
                         if (resp) {
                             this.role.name = '';
                             this.role.nameZh = '';

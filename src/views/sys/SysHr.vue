@@ -2,15 +2,15 @@
     <div>
         <div style="margin-top: 10px;display: flex;justify-content: center">
             <el-input v-model="keywords" placeholder="通过用户名搜索用户···" prefix-icon="el-icon-search"
-                      style="width:400px;margin-right:10px"></el-input>
-            <el-button icon="el-icon-search" type="primary">搜索</el-button>
+                      style="width:400px;margin-right:10px" @keydown.enter.native="doSearch"></el-input>
+            <el-button icon="el-icon-search" type="primary" @click="doSearch">搜索</el-button>
         </div>
         <div class="hr-container">
             <el-card class="hr-card" v-for="(hr,index) in hrs" :key="index">
                 <div slot="header" class="clearfix">
                     <span>{{hr.name}}</span>
                     <el-button style="float:right;padding: 3px 0;color: #ff1524" type="text"
-                               icon="el-icon-delete"></el-button>
+                               icon="el-icon-delete" @click="deleteHr(hr)"></el-button>
                 </div>
                 <div>
                     <div class="img-container">
@@ -76,6 +76,27 @@
             this.initHrs();
         },
         methods: {
+            deleteHr(hr) {
+                this.$confirm('此操作将删除【' + hr.name + '】, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteRequest("/system/hr/" + hr.id).then(resp => {
+                        if (resp) {
+                            this.initHrs();
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            doSearch() {
+                this.initHrs();
+            },
             hidePop(hr) {
                 let roles = [];
                 Object.assign(roles, hr.role);
@@ -133,7 +154,7 @@
                 })
             },
             initHrs() {
-                this.getRequest("/system/hr/").then(resp => {
+                this.getRequest("/system/hr/?keywords=" + this.keywords).then(resp => {
                     this.hrs = resp;
                 })
             }
