@@ -190,7 +190,7 @@
                 :visible.sync="dialogVisible"
                 width="80%">
             <div>
-                <el-form>
+                <el-form :model="emp" :rules="rules" ref="empForm">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="姓名:" prop="name">
@@ -210,7 +210,7 @@
                         <el-col :span="6">
                             <el-form-item label="出生日期:" prop="birthday">
                                 <el-date-picker
-                                        v-model="emp.name"
+                                        v-model="emp.birthday"
                                         size="mini"
                                         type="date"
                                         value-format="yyyy-MM-dd"
@@ -220,8 +220,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
-                            <el-form-item label="政治面貌:" prop="politicId">
-                                <el-select v-model="emp.politicId" placeholder="政治面貌" size="mini" style="width: 200px">
+                            <el-form-item label="政治面貌:" prop="politic">
+                                <el-select v-model="emp.politic.id" placeholder="政治面貌" size="mini" style="width: 200px">
                                     <el-option
                                             v-for="item in politicsstatus"
                                             :key="item.id"
@@ -234,8 +234,8 @@
                     </el-row>
                     <el-row>
                         <el-col :span="6">
-                            <el-form-item label="民族:" prop="nationId">
-                                <el-select v-model="emp.nationId" placeholder="民族" size="mini" style="width: 150px">
+                            <el-form-item label="民族:" prop="nation">
+                                <el-select v-model="emp.nation.id" placeholder="民族" size="mini" style="width: 150px">
                                     <el-option
                                             v-for="item in nations"
                                             :key="item.id"
@@ -272,8 +272,8 @@
                     </el-row>
                     <el-row>
                         <el-col :span="6">
-                            <el-form-item label="职位:" prop="posId">
-                                <el-select v-model="emp.posId" placeholder="职位" size="mini" style="width: 150px">
+                            <el-form-item label="职位:" prop="pos">
+                                <el-select v-model="emp.pos.id" placeholder="职位" size="mini" style="width: 150px">
                                     <el-option
                                             v-for="item in positions"
                                             :key="item.id"
@@ -284,8 +284,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="5">
-                            <el-form-item label="职称:" prop="joblevelId">
-                                <el-select v-model="emp.joblevelId" placeholder="职称" size="mini" style="width: 150px">
+                            <el-form-item label="职称:" prop="joblevel">
+                                <el-select v-model="emp.joblevel.id" placeholder="职称" size="mini" style="width: 150px">
                                     <el-option
                                             v-for="item in joblevels"
                                             :key="item.id"
@@ -296,7 +296,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="所属部门:" prop="departmentId">
+                            <el-form-item label="所属部门:" prop="department">
                                 <el-popover
                                         placement="right"
                                         title="请选择部门"
@@ -323,7 +323,7 @@
                     </el-row>
                     <el-row>
                         <el-col :span="6">
-                            <el-form-item label="工号:" prop="tiptopDegree">
+                            <el-form-item label="工号:" prop="workId">
                                 <el-input size="mini" style="width: 150px" prefix-icon="el-icon-edit"
                                           v-model="emp.workId"
                                           placeholder="工号" disabled></el-input>
@@ -416,7 +416,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="性别:" prop="engageForm">
+                            <el-form-item label="聘用形式:" prop="engageForm">
                                 <el-radio-group v-model="emp.engageForm">
                                     <el-radio label="劳动合同">劳动合同</el-radio>
                                     <el-radio label="劳务合同">劳务合同</el-radio>
@@ -437,7 +437,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="doAddEmp">确 定</el-button>
              </span>
         </el-dialog>
     </div>
@@ -468,15 +468,25 @@
                     birthday: "1990-01-01",
                     idCard: "430681199305252615",
                     wedlock: "已婚",
-                    nationId: 1,
+                    nation: {
+                        id: 1,
+                    },
                     nativePlace: "湖南",
-                    politicId: 13,
+                    politic: {
+                        id: 13
+                    },
                     email: "930441318@qq.com",
                     phone: "17352862905",
                     address: "长沙市星沙区",
-                    departmentId: 5,
-                    joblevelId: 9,
-                    posId: 29,
+                    department: {
+                        id: 0
+                    },
+                    joblevel: {
+                        id: 9
+                    },
+                    pos: {
+                        id: 29
+                    },
                     engageForm: "劳务合同",
                     tiptopDegree: "本科",
                     specialty: "信息管理与信息系统",
@@ -492,25 +502,41 @@
                     workAge: null
                 },
                 dialogVisible: false,
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
                 defaultProps: {
                     children: 'children',
                     label: 'name'
+                },
+                rules: {
+                    name: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+                    gender: [{required: true, message: '请输入性别', trigger: 'blur'}],
+                    birthday: [{required: true, message: '请输入出生日期', trigger: 'blur'}],
+                    politic: [{required: true, message: '请输入政治面貌', trigger: 'blur'}],
+                    idCard: [{required: true, message: '请输入身份证', trigger: 'blur'},{
+                        pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
+                        message:'身份证号码格式不正确',
+                        trigger: 'blur'
+                    }],
+                    nation: [{required: true, message: '请输入民族', trigger: 'blur'}],
+                    nativePlace: [{required: true, message: '请输入籍贯', trigger: 'blur'}],
+                    email: [{required: true, message: '请输入邮箱', trigger: 'blur'}, {
+                        type: 'email',
+                        message: '邮箱格式不正确',
+                        trigger: 'blur'
+                    }],
+                    address: [{required: true, message: '请输入地址', trigger: 'blur'}],
+                    pos: [{required: true, message: '请输入职位', trigger: 'blur'}],
+                    joblevel: [{required: true, message: '请输入职称', trigger: 'blur'}],
+                    department: [{required: true, message: '请输入部门名称', trigger: 'blur'}],
+                    phone: [{required: true, message: '请输入电话号码', trigger: 'blur'}],
+                    tiptopDegree: [{required: true, message: '最高学历', trigger: 'blur'}],
+                    school: [{required: true, message: '请输入毕业院校', trigger: 'blur'}],
+                    specialty: [{required: true, message: '请输入专业', trigger: 'blur'}],
+                    beginDate: [{required: true, message: '请输入入职日期', trigger: 'blur'}],
+                    conversionTime: [{required: true, message: '请输入转正日期', trigger: 'blur'}],
+                    beginContract: [{required: true, message: '请输入合同起始日期', trigger: 'blur'}],
+                    endContract: [{required: true, message: '请输入合同终止日期', trigger: 'blur'}],
+                    engageForm: [{required: true, message: '请输入聘用形式', trigger: 'blur'}],
+                    wedlock: [{required: true, message: '请输入婚姻状况', trigger: 'blur'}],
                 }
             }
         },
@@ -519,9 +545,21 @@
             this.initData();
         },
         methods: {
+            doAddEmp() {
+                this.$refs['empForm'].validate(valid => {
+                    if (valid) {
+                        this.postRequest("/emp/basic/", this.emp).then(resp => {
+                            if (resp) {
+                                this.dialogVisible = false;
+                                this.initEmps();
+                            }
+                        })
+                    }
+                })
+            },
             handleNodeClick(data) {
                 this.inputDepName = data.name;
-                this.emp.departmentId = data.id;
+                this.emp.department.id = data.id;
                 this.popVisible = !this.popVisible;
             },
             showDepView() {
