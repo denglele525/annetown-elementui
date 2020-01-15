@@ -18,7 +18,6 @@
         <div class="posManaMain">
             <el-table
                     :data="positions"
-
                     border
                     @selection-change="handleSelectionChange">
                 size="small"

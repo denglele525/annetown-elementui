@@ -33,8 +33,8 @@ router.beforeEach((to, from, next) => {
         } else {
             next('/?redirect=' + to.path);
         }
-        initMenu(router, store);
-        next();
+        // initMenu(router, store);
+        // next();
     }
     next();
 })
